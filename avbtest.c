@@ -381,7 +381,7 @@ void* startPlayback(void* argument)
         fread((void*)&hdr, sizeof(struct wavhdr), 1, fp);
 
 	if(arg->cfg.dbgLvl >= AVB_TEST_DBG_LVL_VERBOSE) {
-          printf("t%d: size: %lu, chunksize: %d, fmtsize: %d datasize:%d \n", arg->id, sizeof(struct wavhdr), hdr.chunksize, hdr.fmtsize, hdr.datasize);
+          printf("t%d: size: %u, chunksize: %d, fmtsize: %d datasize:%d \n", arg->id, sizeof(struct wavhdr), hdr.chunksize, hdr.fmtsize, hdr.datasize);
           printf("t%d: chunkid: %c%c%c%c - ", arg->id, hdr.chunkid[0], hdr.chunkid[1], hdr.chunkid[2], hdr.chunkid[3]);
           printf("format: %c%c%c%c - ", hdr.format[0], hdr.format[1], hdr.format[2], hdr.format[3]);
           printf("fmtid: %c%c%c%c - ", hdr.fmtid[0], hdr.fmtid[1], hdr.fmtid[2], hdr.fmtid[3]);
