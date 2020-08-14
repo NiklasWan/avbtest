@@ -1,7 +1,7 @@
 CC=$(CROSS_COMPILE)gcc
 
 all: avbtest.c
-	$(CC) -I /usr/include/alsa/ -pthread /usr/lib/arm-linux-gnueabihf/libasound.so -o avbtest avbtest.c
+	$(CC) -o avbtest avbtest.c -pthread -lasound
 
 .PHONY: clean
 

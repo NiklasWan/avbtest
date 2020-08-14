@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <sched.h>
-#include "asoundlib.h"
+#include <alsa/asoundlib.h>
 
 #define TWO_POW_32 ((unsigned long long)4294967296)
 
@@ -144,7 +144,7 @@ void getAVTPSt(struct threadargs* arg, unsigned int ts, struct timespec* st)
     unsigned int diff = ((ts > currtime)?(ts - currtime):((TWO_POW_32 - currtime) + ts));
 
     if(arg->cfg.dbgLvl >= AVB_TEST_DBG_LVL_INFO)
-      printf("t%d: syncts: %lu currts: %lu diff: %lu \n", arg->id, ts, currtime, diff);
+      printf("t%d: syncts: %u currts: %u diff: %u \n", arg->id, ts, currtime, diff);
 
     st->tv_sec  += diff / 1000000000;
     st->tv_nsec += diff % 1000000000;
@@ -454,7 +454,7 @@ void* startPlayback(void* argument)
     clock_gettime(arg->cfg.clkId, &t1);
 
     if(arg->cfg.dbgLvl >= AVB_TEST_DBG_LVL_INFO)
-	printf("t%d: Playback starting @ %d s %d ns \n", arg->id, t1.tv_sec, t1.tv_nsec);
+	printf("t%d: Playback starting @ %ld s %ld ns \n", arg->id, t1.tv_sec, t1.tv_nsec);
 
     usleep(1);
 
@@ -481,7 +481,7 @@ void* startPlayback(void* argument)
                t2.tv_nsec = 0;
                timespec_diff(&t, &t2, &d);
                if(arg->cfg.dbgLvl >= AVB_TEST_DBG_LVL_INFO)
-		 printf("t%d: Timestamp diff @ %d s %d ns \n", arg->id, d.tv_sec, d.tv_nsec);
+		 printf("t%d: Timestamp diff @ %ld s %ld ns \n", arg->id, d.tv_sec, d.tv_nsec);
 	    }
             timespec_sum(&t, &d);
 	    ts = getAVTPTs(&t);
@@ -494,7 +494,7 @@ void* startPlayback(void* argument)
 	if(numFrames == 0) {
 		if(arg->cfg.dbgLvl >= AVB_TEST_DBG_LVL_INFO) {
 			clock_gettime(arg->cfg.clkId, &tp);
-			printf("t%d: First frame transferred @ %d s %d ns \n");
+			printf("t%d: First frame transferred @ %ld s %ld ns \n", arg->id, tp.tv_sec, tp.tv_nsec);
 		}	
 	}
 
@@ -627,7 +627,7 @@ void* startRecord(void* argument)
 	if((numFrames == 0) && (rcvdFrames > 0)) {
 		if(arg->cfg.dbgLvl >= AVB_TEST_DBG_LVL_INFO) {
 			clock_gettime(arg->cfg.clkId, &tp);
-			printf("t%d: First frame received @ %d s %d ns \n");
+			printf("t%d: First frame received @ %ld s %ld ns \n", arg->id, tp.tv_sec, tp.tv_nsec);
 		}	
 	}
 
@@ -656,10 +656,10 @@ void* startRecord(void* argument)
 	       syncts = ts;
 	       clock_gettime(arg->cfg.clkId, &synctime);
 	       if(arg->cfg.dbgLvl >= AVB_TEST_DBG_LVL_INFO)
-		  printf("t%d: Record read ts %lu (%lds, %dns)\n", arg->id, ts, synctime.tv_sec, synctime.tv_nsec);
+		  printf("t%d: Record read ts %lu (%lds, %ldns)\n", arg->id, ts, synctime.tv_sec, synctime.tv_nsec);
 	       getAVTPSt(arg, syncts, &synctime);
 	       if(arg->cfg.dbgLvl >= AVB_TEST_DBG_LVL_INFO)
-		  printf("t%d: Record synctime (%lds, %dns)\n", arg->id, synctime.tv_sec, synctime.tv_nsec);
+		  printf("t%d: Record synctime (%lds, %ldns)\n", arg->id, synctime.tv_sec, synctime.tv_nsec);
 	    }
         }
 
